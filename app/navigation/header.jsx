@@ -6,10 +6,11 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import logo from "../assets/images/nsdmalogo.png";
+import Link from "next/link";
 
 const navigation = [
   { name: "Forecast", href: "#", current: true },
-  { name: "About", href: "#", current: false },
+  { name: "About", href: "/about", current: false },
   { name: "Weather Buletin", href: "#", current: false },
 ];
 
@@ -40,13 +41,17 @@ export default function Header() {
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-center justify-between">
+            <Link href="/">
             <div className="shrink-0 items-center block sm:hidden">
               <Image src={logo} width={300} height={200} alt="logo" />
             </div>
+            </Link>
 
+           <Link href="/">
             <div className="shrink-0 items-center hidden sm:block">
               <Image src={logo} width={600} height={900} alt="logo" />
             </div>
+           </Link>
 
             <div className="hidden sm:block">
               <div className="flex space-x-8">
