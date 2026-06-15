@@ -27,7 +27,7 @@ const Page = () => {
         className="h-[80vh] w-full object-cover"
         alt="about-banner"
       />
-      <div className=" py-16 px-2 sm:px-6 lg:px-16">
+      <div className="py-16 px-2 sm:px-6 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="md:col-span-8">
             <div className="text-lg md:text-3xl font-bold text-[#051937]">

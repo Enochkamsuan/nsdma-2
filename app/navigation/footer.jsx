@@ -90,7 +90,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="/"
+                    href="/contact"
                     className="flex items-center gap-3 hover:text-blue-300 transition"
                   >
                     <MdFormatListBulleted />
