@@ -130,7 +130,7 @@ const Footer = () => {
 
                 <li>
                   <a
-                    href="/"
+                    href="/terms-condition"
                     className="flex items-center gap-3 hover:text-blue-300 transition"
                   >
                     <MdFormatListBulleted />

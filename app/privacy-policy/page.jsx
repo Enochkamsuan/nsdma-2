@@ -177,12 +177,13 @@ const Page = () => {
               <a href="#">sdma.nagaland@gmail.com</a>
             </div>
           </li>
-          <span className="text-[#444444] font-bold">Acknowledgement</span><br />
-        <span className="text-sm text-[#444444]">
-          NSDMA gratefully acknowledges the Nagaland GIS & Remote Sensing Centre
-          (NGIS&RS), Department of Planning & Coordination, Government of
-          Nagaland, for providing district boundary datasets.
-        </span>
+          <span className="text-[#444444] font-bold">Acknowledgement</span>
+          <br />
+          <span className="text-sm text-[#444444]">
+            NSDMA gratefully acknowledges the Nagaland GIS & Remote Sensing
+            Centre (NGIS&RS), Department of Planning & Coordination, Government
+            of Nagaland, for providing district boundary datasets.
+          </span>
         </ol>
       </div>
     </section>
