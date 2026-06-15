@@ -136,7 +136,30 @@ const Page = () => {
           systems, mitigate the impacts of extreme weather events, and build a
           safer, more climate-resilient Nagaland.
         </div>
-        <div className="text-lg md:text-3xl font-bold text-[#051937]">Access NSDMA Weather Portal Demo Video</div>
+        <div className="text-lg md:text-3xl font-bold text-[#051937]">
+          Access NSDMA Weather Portal Demo Video
+        </div>
+        <div>
+          <video autoPlay loop muted playsInline controls className="w-full">
+            <source
+              className="w-full"
+              src="/video/NSDMA-demo-video.mp4"
+              type="video/mp4"
+            />
+          </video>
+        </div>
+        <div className="text-lg md:text-3xl font-bold text-center my-6 text-[#051937]">
+          Access NSDMA Weather APP Demo Video
+        </div>
+         <div className="flex justify-center">
+          <video autoPlay loop muted playsInline controls className="w-full md:w-1/3 max-h-[70vh]">
+            <source
+              className="w-full"
+              src="/video/NSDMA-Mobile-App-demo-video.mp4"
+              type="video/mp4"
+            />
+          </video>
+        </div>
       </div>
     </section>
   );

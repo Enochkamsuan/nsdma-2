@@ -81,7 +81,7 @@ const Footer = () => {
               <ul className="space-y-6">
                 <li>
                   <a
-                    href="/"
+                    href="/disclaimer"
                     className="flex items-center gap-3 hover:text-blue-300 transition"
                   >
                     <MdFormatListBulleted />
