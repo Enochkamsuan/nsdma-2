@@ -5,7 +5,8 @@ import Image from "next/image";
 import { CiLocationOn } from "react-icons/ci";
 import { CiGlobe, CiMail } from "react-icons/ci";
 import { FaYoutube } from "react-icons/fa6";
-import { FaTwitter, FaFacebookF, FaFax } from "react-icons/fa";
+import { BiLogoPlayStore } from "react-icons/bi";
+import { FaTwitter, FaFacebookF, FaFax, FaApple } from "react-icons/fa";
 import { MdFormatListBulleted, MdOutlinePhone } from "react-icons/md";
 
 const Footer = () => {
@@ -154,6 +155,33 @@ const Footer = () => {
                 <li className="flex items-center gap-4">
                   <CiMail className="text-lg shrink-0" />
                   <a href="/">snma.nagaland@gmail.com</a>
+                </li>
+                <li className="flex items-center gap-4">
+                  <div className="flex gap-4 mt-4">
+                    <a
+                      href="#"
+                      className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded"
+                    >
+                      <BiLogoPlayStore className="text-2xl" />
+                      <div>
+                        <p className="text-[10px] leading-none">GET IT ON</p>
+                        <p className="text-sm font-semibold text-nowrap">Google Play</p>
+                      </div>
+                    </a>
+
+                    <a
+                      href="#"
+                      className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded"
+                    >
+                      <FaApple className="text-2xl" />
+                      <div>
+                        <p className="text-[10px] text-nowrap leading-none">
+                          Download on the
+                        </p>
+                        <p className="text-sm font-semibold">App Store</p>
+                      </div>
+                    </a>
+                  </div>
                 </li>
               </ul>
             </div>
