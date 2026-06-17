@@ -341,8 +341,7 @@ const Landing = () => {
                       {slide.map((row, i) => (
                         <div
                           key={i}
-                          className="relative overflow-hidden rounded-3xl bg-white p-6 shadow-sm border border-slate-200 hover:shadow-lg transition-all duration-300"
-                        >
+className="relative overflow-hidden rounded-3xl bg-slate-600/80 p-6 shadow-lg border border-slate-700 hover:border-slate-600 hover:shadow-xl transition-all duration-300"                        >
                           <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-blue-100" />
                           <div className="absolute top-5 right-5 text-4xl">
                             {row.icon}

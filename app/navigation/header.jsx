@@ -41,14 +41,14 @@ export default function Header() {
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-center justify-between">
-            <Link href="/">
-            <div className="shrink-0 items-center block sm:hidden">
+            <Link href="/" className=" block sm:hidden">
+            <div className="shrink-0 items-center">
               <Image src={logo} width={300} height={200} alt="logo" />
             </div>
             </Link>
 
-           <Link href="/">
-            <div className="shrink-0 items-center hidden sm:block">
+           <Link href="/" className="hidden sm:block">
+            <div className="shrink-0 items-center">
               <Image src={logo} width={600} height={900} alt="logo" />
             </div>
            </Link>
@@ -82,7 +82,6 @@ export default function Header() {
     top-0
     left-0
     z-50
-    h-screen
     w-72
     bg-[#051937]
     shadow-xl
@@ -91,7 +90,7 @@ export default function Header() {
     data-closed:-translate-x-full
   "
       >
-        <div className="pt-20 px-4 space-y-2">
+        <div className="py-16 px-4 space-y-2">
           {navigation.map((item) => (
             <DisclosureButton
               key={item.name}
