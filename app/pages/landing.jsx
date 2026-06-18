@@ -16,8 +16,9 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-
-// ─── Static Data ─────────────────────────────────────────────────────────────
+// import Map from "../component/MapSvg";
+import map from "../assets/images/nagaland-map-slide1.png";
+import Image from "next/image";
 
 const weatherData = [
   {
@@ -123,8 +124,6 @@ const metricsData = metricsRaw.map((d) => ({
   aqi: normalize("aqi", d.aqi),
 }));
 
-// ─── Deterministic Hourly Data (no Math.random → no hydration mismatch) ──────
-
 const ICONS = [Sun, CloudSun, CloudRain, Moon];
 
 const createHourlyData = (dayIndex = 0) =>
@@ -152,8 +151,6 @@ const forecastDays = [
   { day: "Tue", high: 32, low: 23, hourly: createHourlyData(6) },
   { day: "Wed", high: 31, low: 22, hourly: createHourlyData(7) },
 ];
-
-// ─── Districts & Stations ─────────────────────────────────────────────────────
 
 const STATIONS = [
   "DC Office",
@@ -185,8 +182,6 @@ const districts = {
   Wokha: STATIONS,
   Zhunheboto: STATIONS,
 };
-
-// ─── Tooltip Components ───────────────────────────────────────────────────────
 
 function RainfallTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
@@ -234,11 +229,9 @@ function MetricsTooltip({ active, payload, label }) {
   );
 }
 
-// ─── Chart Card ───────────────────────────────────────────────────────────────
-
 function ChartCard({ title, subtitle, children }) {
   return (
-    <div className="relative h-full overflow-hidden rounded-3xl bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl border border-white/10 p-5 shadow-xl shadow-black/30 flex flex-col">
+    <div className="relative h-full overflow-hidden rounded-3xl bg-linear-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl border border-white/10 p-5 shadow-xl shadow-black/30 flex flex-col">
       <div className="flex items-start justify-between">
         <div>
           <h4 className="text-sm font-semibold text-white">{title}</h4>
@@ -256,8 +249,6 @@ function ChartCard({ title, subtitle, children }) {
     </div>
   );
 }
-
-// ─── Charts ───────────────────────────────────────────────────────────────────
 
 function RainfallChart() {
   return (
@@ -354,8 +345,6 @@ function MetricsTrendChart() {
   );
 }
 
-// ─── Forecast Section ─────────────────────────────────────────────────────────
-
 function ForecastSection() {
   const [selectedDay, setSelectedDay] = useState(0);
   const scrollRef = useRef(null);
@@ -377,13 +366,13 @@ function ForecastSection() {
       <div className="mt-5 border-b relative border-white/10">
         <button
           onClick={scrollLeft}
-          className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-slate-800/90 p-2 text-white shadow-lg hover:bg-slate-700"
+          className="absolute left-2 top-[83%] z-10 -translate-y-1/2 text-white cursor-pointer"
         >
           ←
         </button>
         <button
           onClick={scrollRight}
-          className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-slate-800/90 p-2 text-white shadow-lg hover:bg-slate-700"
+          className="absolute right-2 top-[83%] z-10 -translate-y-1/2 text-white cursor-pointer"
         >
           →
         </button>
@@ -393,7 +382,7 @@ function ForecastSection() {
             <button
               key={day.day}
               onClick={() => setSelectedDay(index)}
-              className={`min-w-[140px] px-4 py-4 transition-all ${
+              className={`min-w-35 px-4 py-4 transition-all ${
                 selectedDay === index
                   ? "bg-white/5 border-b-2 border-cyan-400"
                   : "hover:bg-white/5"
@@ -409,7 +398,6 @@ function ForecastSection() {
         </div>
       </div>
 
-      {/* Hourly forecast */}
       <div className="p-6">
         <h3 className="mb-4 text-sm font-medium text-slate-300">
           Hourly Forecast
@@ -444,8 +432,6 @@ function ForecastSection() {
   );
 }
 
-// ─── Landing Page ─────────────────────────────────────────────────────────────
-
 const Landing = () => {
   const [district, setDistrict] = useState("");
   const [station, setStation] = useState("");
@@ -468,7 +454,6 @@ const Landing = () => {
 
   return (
     <div>
-      {/* ── Hero ── */}
       <section>
         <div
           style={{ backgroundImage: `url(${hero.src})` }}
@@ -541,7 +526,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* ── District Weather Cards ── */}
       <section className="py-16 px-2 sm:px-6 lg:px-16">
         <div className="overflow-hidden">
           <div
@@ -554,7 +538,7 @@ const Landing = () => {
                   {slide.map((row, i) => (
                     <div
                       key={i}
-                      className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl border border-white/10 p-6 shadow-xl shadow-black/30 hover:border-white/20 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+                      className="group relative overflow-hidden rounded-3xl bg-linear-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl border border-white/10 p-6 shadow-xl shadow-black/30 hover:border-white/20 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
                     >
                       <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-cyan-400/20 blur-3xl transition-colors duration-300 group-hover:bg-cyan-400/30" />
                       <div className="relative flex items-start justify-between">
@@ -578,7 +562,7 @@ const Landing = () => {
                           / {row.low}°C
                         </span>
                       </div>
-                      <div className="relative my-5 h-px bg-gradient-to-r from-white/0 via-white/15 to-white/0" />
+                      <div className="relative my-5 h-px bg-linear-to-r from-white/0 via-white/15 to-white/0" />
                       <div className="relative flex items-center justify-between text-sm text-slate-300">
                         <span className="flex items-center gap-1.5">
                           <FaTint className="text-sky-400" /> 76%
@@ -613,24 +597,24 @@ const Landing = () => {
         {/* Charts */}
         <div className="w-full md:w-2/3 mt-3">
           <div className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-3">
-            <div className="h-[340px]">
+            <div className="h-85">
               <RainfallChart />
             </div>
-            <div className="h-[340px]">
+            <div className="h-85">
               <MetricsTrendChart />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Forecast ── */}
       <section className="py-16 px-2 sm:px-6 lg:px-16">
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-12 gap-4 items-center">
           <div className="col-span-12 lg:col-span-8">
             <ForecastSection />
           </div>
           <div className="col-span-12 lg:col-span-4">
-            {/* Weather image, radar, banner, etc */}
+            {/* <Map /> */}
+            <Image className="w-full" src={map} height={200} width={200} alt="map" />
           </div>
         </div>
       </section>
