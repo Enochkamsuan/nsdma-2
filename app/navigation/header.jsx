@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Disclosure,
   DisclosureButton,
@@ -7,11 +9,13 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import logo from "../assets/images/nsdmalogo.png";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navigation = [
-  { name: "Forecast", href: "#", current: true },
-  { name: "About", href: "/about", current: false },
-  { name: "Weather Buletin", href: "#", current: false },
+  { name: "Forecast", href: "/" },
+  { name: "Advisories", href: "/advisories" },
+  { name: "About", href: "/about" },
+  { name: "Weather Buletin", href: "#" },
 ];
 
 function classNames(...classes) {
@@ -19,6 +23,8 @@ function classNames(...classes) {
 }
 
 export default function Header() {
+  const pathName = usePathname("/");
+
   return (
     <Disclosure
       as="nav"
@@ -42,33 +48,39 @@ export default function Header() {
           </div>
           <div className="flex flex-1 items-center justify-between">
             <Link href="/" className=" block sm:hidden">
-            <div className="shrink-0 items-center">
-              <Image src={logo} width={300} height={200} alt="logo" />
-            </div>
+              <div className="shrink-0 items-center">
+                <Image src={logo} width={300} height={200} alt="logo" />
+              </div>
             </Link>
 
-           <Link href="/" className="hidden sm:block">
-            <div className="shrink-0 items-center">
-              <Image src={logo} width={600} height={900} alt="logo" />
-            </div>
-           </Link>
+            <Link href="/" className="hidden sm:block">
+              <div className="shrink-0 items-center">
+                <Image src={logo} width={600} height={900} alt="logo" />
+              </div>
+            </Link>
 
             <div className="hidden sm:block">
               <div className="flex space-x-8">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
-                    aria-current={item.current ? "page" : undefined}
                     className={classNames(
-                      item.current
-                        ? "bg-gray-950/50 text-gray-300"
-                        : "text-red-600 hover:bg-white/5",
-                      "rounded-md px-3 py-2 text-sm font-medium",
+                      "group relative px-3 py-2 text-sm font-medium transition-colors",
+                      pathName === item.href ? "text-red-600" : "text-red-600",
                     )}
                   >
                     {item.name}
-                  </a>
+
+                    <span
+                      className={classNames(
+                        "absolute left-1/2 -bottom-1 h-[2px] bg-red-600 transition-all duration-500 ease-out",
+                        pathName === item.href
+                          ? "w-full -translate-x-1/2"
+                          : "w-0 -translate-x-1/2 group-hover:w-full",
+                      )}
+                    />
+                  </Link>
                 ))}
               </div>
             </div>

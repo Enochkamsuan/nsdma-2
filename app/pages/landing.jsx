@@ -545,23 +545,23 @@ const Landing = () => {
               </div>
               {/* Daily forecast card */}
               <div>
-                <div className="text-sm font-semibold text-gray-700 mb-2">
+                <div className="text-sm font-semibold text-white mb-2">
                   3-Day Forecast
                 </div>
-                <div className="flex gap-2 z-10 rounded-md p-3">
+                <div className="flex gap-2 z-10 rounded-md">
                   {dailyForecast.map((day) => (
                     <div
                       key={day.day}
                       className="flex flex-1 flex-col items-center gap-1 rounded-md bg-white/20 py-2"
                     >
-                      <span className="text-xs font-medium text-gray-600">
+                      <span className="text-xs font-medium text-gray-900">
                         {day.day}
                       </span>
                       <day.icon className="text-xl text-[#fc9e47fa]" />
                       <span className="text-sm font-bold text-gray-900">
                         {day.high}°/{day.low}°
                       </span>
-                      <span className="text-[10px] text-gray-500">
+                      <span className="text-[10px] text-white">
                         {day.condition}
                       </span>
                     </div>

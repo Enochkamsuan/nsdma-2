@@ -33,3 +33,48 @@ body {
   color: var(--foreground);
   font-family: var(--font-playfair);
 }
+@theme {
+  /* Brand colors */
+  --color-gov-navy: #0c1f3f;
+  --color-gov-navy-foreground: #ffffff;
+  --color-gov-saffron: #f59e0b;
+
+  /* Semantic / status colors */
+  --color-emergency: #dc2626;
+  --color-emergency-foreground: #ffffff;
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #1c1917;
+  --color-safe: #16a34a;
+  --color-safe-foreground: #ffffff;
+
+  /* UI tokens */
+  --color-primary: #1e3a8a;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f1f5f9;
+  --color-secondary-foreground: #0f172a;
+  --color-accent: #e0e7ff;
+  --color-accent-foreground: #1e3a8a;
+
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a;
+  --color-border: #e2e8f0;
+  --color-input: #e2e8f0;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+
+  /* Animations */
+  --animate-ticker: ticker 30s linear infinite;
+  --animate-pulse-dot: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
