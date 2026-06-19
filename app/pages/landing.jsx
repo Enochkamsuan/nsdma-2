@@ -26,6 +26,7 @@ import {
   WiSunrise,
   WiSunset,
 } from "react-icons/wi";
+import WeatherAnimation from "../component/weatherAnimation/page";
 
 const dailyForecast = [
   { day: "Today", high: 28, low: 19, condition: "Sunny", icon: WiDaySunny },
@@ -477,6 +478,7 @@ const Landing = () => {
           style={{ backgroundImage: `url(${hero.src})` }}
           className="min-h-[80vh] bg-cover bg-center relative bg-no-repeat after:absolute after:content-[''] after:bg-black/50 after:inset-0 after:z-0 px-2 sm:px-6 lg:px-16"
         >
+          <WeatherAnimation condition={dailyForecast[0]?.condition} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 py-4 md:py-16 items-center relative z-10">
             <div className="max-w-xl">
               <div className="inline-flex border rounded-full bg-white/20 px-2 items-center">
