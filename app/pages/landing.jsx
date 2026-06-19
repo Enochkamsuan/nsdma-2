@@ -19,6 +19,24 @@ import {
 // import Map from "../component/MapSvg";
 import map from "../assets/images/nagaland-map-slide1.png";
 import Image from "next/image";
+import {
+  WiDaySunny,
+  WiCloudy,
+  WiRain,
+  WiSunrise,
+  WiSunset,
+} from "react-icons/wi";
+
+const dailyForecast = [
+  { day: "Today", high: 28, low: 19, condition: "Sunny", icon: WiDaySunny },
+  { day: "Tomorrow", high: 25, low: 18, condition: "Cloudy", icon: WiCloudy },
+  { day: "Sun", high: 22, low: 17, condition: "Rain", icon: WiRain },
+];
+
+const sunTimes = {
+  sunrise: "5:12 AM",
+  sunset: "6:48 PM",
+};
 
 const weatherData = [
   {
@@ -475,57 +493,111 @@ const Landing = () => {
               </div>
             </div>
 
-            <div className="w-full max-w-xl bg-white rounded-md p-3">
-              <form onSubmit={handleSubmit}>
-                <div className="flex flex-col md:flex-row gap-3 items-stretch">
-                  <div className="flex-1">
-                    <select
-                      value={district}
-                      onChange={handleDistrictChange}
-                      className="w-full rounded-md border border-gray-300 px-3 py-3 text-gray-900 bg-white"
-                    >
-                      <option value="">Select District</option>
-                      {Object.keys(districts).map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="flex-1">
-                    <select
-                      value={station}
-                      onChange={(e) => setStation(e.target.value)}
-                      disabled={!district}
-                      className="w-full rounded-md border border-gray-300 px-3 py-3 text-gray-900 bg-white disabled:cursor-not-allowed disabled:bg-gray-100"
-                    >
-                      <option value="">
-                        {district ? "Select Station" : "Select District First"}
-                      </option>
-                      {district &&
-                        districts[district].map((item) => (
+            <div className="w-full max-w-xl flex flex-col gap-4">
+              <div className="bg-white rounded-md p-3">
+                <form onSubmit={handleSubmit}>
+                  <div className="flex flex-col md:flex-row gap-3 items-stretch">
+                    <div className="flex-1">
+                      <select
+                        value={district}
+                        onChange={handleDistrictChange}
+                        className="w-full rounded-md border border-gray-300 px-3 py-3 text-gray-900 bg-white"
+                      >
+                        <option value="">Select District</option>
+                        {Object.keys(districts).map((item) => (
                           <option key={item} value={item}>
                             {item}
                           </option>
                         ))}
-                    </select>
+                      </select>
+                    </div>
+
+                    <div className="flex-1">
+                      <select
+                        value={station}
+                        onChange={(e) => setStation(e.target.value)}
+                        disabled={!district}
+                        className="w-full rounded-md border border-gray-300 px-3 py-3 text-gray-900 bg-white disabled:cursor-not-allowed disabled:bg-gray-100"
+                      >
+                        <option value="">
+                          {district
+                            ? "Select Station"
+                            : "Select District First"}
+                        </option>
+                        {district &&
+                          districts[district].map((item) => (
+                            <option key={item} value={item}>
+                              {item}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={!district || !station}
+                      className="text-black transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <FaSearch className="text-lg" />
+                    </button>
+                  </div>
+                </form>
+              </div>
+              {/* Daily forecast card */}
+              <div>
+                <div className="text-sm font-semibold text-gray-700 mb-2">
+                  3-Day Forecast
+                </div>
+                <div className="flex gap-2 z-10 rounded-md p-3">
+                  {dailyForecast.map((day) => (
+                    <div
+                      key={day.day}
+                      className="flex flex-1 flex-col items-center gap-1 rounded-md bg-white/20 py-2"
+                    >
+                      <span className="text-xs font-medium text-gray-600">
+                        {day.day}
+                      </span>
+                      <day.icon className="text-xl text-[#fc9e47fa]" />
+                      <span className="text-sm font-bold text-gray-900">
+                        {day.high}°/{day.low}°
+                      </span>
+                      <span className="text-[10px] text-gray-500">
+                        {day.condition}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="relative z-10 bg-white/90 rounded-md p-3">
+                <div className="text-sm font-semibold text-gray-700 mb-2">
+                  Sun Times
+                </div>
+                <div className="flex gap-2">
+                  <div className="flex flex-1 items-center gap-2 rounded-md bg-white/20 py-2 px-3">
+                    <WiSunrise className="text-2xl text-[#fc9e47fa]" />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-gray-500">Sunrise</span>
+                      <span className="text-sm font-bold text-gray-900">
+                        {sunTimes.sunrise}
+                      </span>
+                    </div>
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={!district || !station}
-                    className="text-black transition disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <FaSearch className="text-lg" />
-                  </button>
+                  <div className="flex flex-1 items-center gap-2 rounded-md bg-white/20 py-2 px-3">
+                    <WiSunset className="text-2xl text-[#fc9e47fa]" />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-gray-500">Sunset</span>
+                      <span className="text-sm font-bold text-gray-900">
+                        {sunTimes.sunset}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
       </section>
-
       <section className="py-16 px-2 sm:px-6 lg:px-16">
         <div className="overflow-hidden">
           <div
@@ -614,7 +686,13 @@ const Landing = () => {
           </div>
           <div className="col-span-12 lg:col-span-4">
             {/* <Map /> */}
-            <Image className="w-full" src={map} height={200} width={200} alt="map" />
+            <Image
+              className="w-full"
+              src={map}
+              height={200}
+              width={200}
+              alt="map"
+            />
           </div>
         </div>
       </section>
