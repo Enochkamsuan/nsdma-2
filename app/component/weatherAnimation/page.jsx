@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo,useEffect,useState } from "react";
 
 function classifyCondition(condition = "") {
   const c = condition.toLowerCase();
@@ -233,8 +233,10 @@ function CloudShape({ scale = 1 }) {
 }
 
 function RainyAnimation() {
-  const drops = useMemo(() => {
-    return Array.from({ length: 40 }).map((_, i) => ({
+  const [drops, setDrops] = useState([]);
+
+  useEffect(() => {
+    const generatedDrops = Array.from({ length: 40 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       duration: 0.6 + Math.random() * 0.9,
@@ -242,12 +244,14 @@ function RainyAnimation() {
       length: 14 + Math.random() * 22,
       opacity: 0.25 + Math.random() * 0.45,
     }));
+
+    setDrops(generatedDrops);
   }, []);
 
   return (
     <div className="absolute inset-0">
       <div className="absolute inset-0 weather-rain-wash" />
-      <div className="absolute inset-0">
+       <div className="absolute inset-0">
         {drops.map((d) => (
           <span
             key={d.id}

@@ -29,9 +29,9 @@ import NagalandStationMap from "../component/nagalandStationMap";
 import { mockStationWeather } from "../data/data";
 
 const dailyForecast = [
-  { day: "Today", high: 28, low: 19, condition: "Sunny", icon: WiDaySunny },
+  { day: "Today", high: 22, low: 17, condition: "Rain", icon: WiRain },
   { day: "Tomorrow", high: 25, low: 18, condition: "Cloudy", icon: WiCloudy },
-  { day: "Sun", high: 22, low: 17, condition: "Rain", icon: WiRain },
+  { day: "Tues", high: 28, low: 19, condition: "Sunny", icon: WiDaySunny },
 ];
 
 const sunTimes = {
