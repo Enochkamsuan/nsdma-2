@@ -16,8 +16,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-// import Map from "../component/MapSvg";
-import map from "../assets/images/nagaland-map-slide1.png";
 import Image from "next/image";
 import {
   WiDaySunny,
@@ -27,6 +25,8 @@ import {
   WiSunset,
 } from "react-icons/wi";
 import WeatherAnimation from "../component/weatherAnimation/page";
+import NagalandStationMap from "../component/nagalandStationMap";
+import { mockStationWeather } from "../data/data";
 
 const dailyForecast = [
   { day: "Today", high: 28, low: 19, condition: "Sunny", icon: WiDaySunny },
@@ -364,6 +364,122 @@ function MetricsTrendChart() {
   );
 }
 
+function AirQualityCard() {
+  const pm25 = 38;
+  const pm10 = 72;
+
+  // Example AQI calculation
+  const aqi = Math.max(pm25, pm10);
+
+  const getAQIStatus = (value) => {
+    if (value <= 50)
+      return {
+        label: "Good",
+        color: "#22c55e",
+      };
+
+    if (value <= 100)
+      return {
+        label: "Moderate",
+        color: "#eab308",
+      };
+
+    if (value <= 200)
+      return {
+        label: "Poor",
+        color: "#f97316",
+      };
+
+    if (value <= 300)
+      return {
+        label: "Unhealthy",
+        color: "#ef4444",
+      };
+
+    if (value <= 400)
+      return {
+        label: "Severe",
+        color: "#a855f7",
+      };
+
+    return {
+      label: "Hazardous",
+      color: "#7f1d1d",
+    };
+  };
+
+  const status = getAQIStatus(aqi);
+
+  return (
+    <ChartCard title="Air Quality Index" subtitle="PM2.5 · PM10">
+      <div className="flex items-center justify-between">
+        <div>
+          <div
+            className="text-5xl font-bold leading-none"
+            style={{ color: status.color }}
+          >
+            {aqi}
+          </div>
+
+          <div
+            className="mt-2 text-sm font-medium"
+            style={{ color: status.color }}
+          >
+            {status.label}
+          </div>
+        </div>
+
+        <div
+          className="flex h-16 w-16 items-center justify-center rounded-full border-4"
+          style={{
+            borderColor: status.color,
+            color: status.color,
+          }}
+        >
+          AQI
+        </div>
+      </div>
+
+      <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/10">
+        <div
+          className="h-full rounded-full"
+          style={{
+            width: `${Math.min((aqi / 500) * 100, 100)}%`,
+            backgroundColor: status.color,
+          }}
+        />
+      </div>
+
+      <div className="mt-2 flex justify-between text-[10px] text-slate-500">
+        <span>Good</span>
+        <span>Moderate</span>
+        <span>Poor</span>
+        <span>Unhealthy</span>
+        <span>Severe</span>
+        <span>Haz.</span>
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-3">
+        <div className="rounded-xl border border-white/5 bg-white/5 p-3">
+          <div className="text-[11px] text-slate-400">PM2.5</div>
+          <div className="mt-1 text-lg font-semibold text-slate-100">
+            {pm25}
+            <span className="ml-1 text-xs text-slate-400">μg/m³</span>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-white/5 bg-white/5 p-3">
+          <div className="text-[11px] text-slate-400">PM10</div>
+          <div className="mt-1 text-lg font-semibold text-slate-100">
+            {pm10}
+            <span className="ml-1 text-xs text-slate-400">μg/m³</span>
+          </div>
+        </div>
+      </div>
+    </ChartCard>
+  );
+}
+
 function ForecastSection() {
   const [selectedDay, setSelectedDay] = useState(0);
   const scrollRef = useRef(null);
@@ -652,8 +768,6 @@ const Landing = () => {
             ))}
           </div>
         </div>
-
-        {/* Dots */}
         <div className="flex justify-center gap-2 mt-8">
           {slides.map((_, i) => (
             <button
@@ -667,36 +781,42 @@ const Landing = () => {
             />
           ))}
         </div>
-
-        {/* Charts */}
-        <div className="w-full md:w-2/3 mt-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-3">
+        <div className="w-full mt-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 items-stretch gap-3">
             <div className="h-85">
               <RainfallChart />
             </div>
             <div className="h-85">
               <MetricsTrendChart />
             </div>
+            <div>
+              <AirQualityCard />
+            </div>
           </div>
         </div>
       </section>
-
       <section className="py-16 px-2 sm:px-6 lg:px-16">
-        <div className="grid grid-cols-12 gap-4 items-center">
-          <div className="col-span-12 lg:col-span-8">
+        {/* <div className="grid grid-cols-12 gap-4 items-center">
+          <div className="col-span-12 lg:col-span-5">
             <ForecastSection />
           </div>
-          <div className="col-span-12 lg:col-span-4">
-            {/* <Map /> */}
-            <Image
-              className="w-full"
-              src={map}
-              height={200}
-              width={200}
-              alt="map"
-            />
+          <div className="col-span-12 lg:col-span-7">
+            <div className="text-2xl font-extrabold py-3">Weather Radar</div>
+            <div className="flex justify-center">
+              <NagalandStationMap
+                weatherByStationId={mockStationWeather}
+                className="w-full h-[95vh]"
+              />
+            </div>
           </div>
-        </div>
+        </div> */}
+        <div className="text-2xl font-extrabold py-3">Weather Radar</div>
+            <div className="flex justify-center">
+              <NagalandStationMap
+                weatherByStationId={mockStationWeather}
+                className="w-full h-[95vh]"
+              />
+            </div>
       </section>
     </div>
   );
