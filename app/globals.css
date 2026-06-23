@@ -3,6 +3,18 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --bg-base: #0f1117;
+  --bg-card: #1a1d27;
+  --bg-card-hover: #1f2235;
+  --border-card: #2a2d3e;
+  --text-primary: #ffffff;
+  --text-secondary: #8b8fa8;
+  --text-muted: #555870;
+  --accent-orange: #f97316;
+  --accent-yellow: #fbbf24;
+  --accent-blue: #38bdf8;
+  --accent-teal: #14b8a6;
+  --gradient-card: linear-gradient(135deg, #f97316 0%, #fbbf24 100%);
 }
 
 @theme inline {
@@ -32,6 +44,8 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-playfair);
+  background-color: var(--bg-base);
+  -webkit-font-smoothing: antialiased;
 }
 @theme {
   /* Brand colors */
@@ -69,6 +83,23 @@ body {
   --animate-pulse-dot: pulse-dot 1.5s ease-in-out infinite;
 }
 
+.wind-bar {
+  width: 6px;
+  border-radius: 3px;
+  background: var(--accent-orange);
+  animation: barPulse 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes barPulse {
+  from { opacity: 0.6; }
+  to   { opacity: 1; }
+}
+
+.uv-arc {
+  stroke-linecap: round;
+  fill: none;
+  transition: stroke-dashoffset 0.8s ease;
+}
 @keyframes ticker {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }

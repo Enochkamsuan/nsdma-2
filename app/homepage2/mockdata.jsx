@@ -1,0 +1,30 @@
+export const STATIONS = [
+  "DC Office",
+  "Dhansiripar",
+  "Medzhephima",
+  "Patkai Christian College",
+  "Pherima, Crucifix Pilgrim",
+  "Piphema Council Hall",
+  "Razaphe Bawe (Eden Ram)",
+  "Zoological Park, Nagaland",
+];
+
+export const districts = {
+  Chumoukedima: STATIONS,
+  Dimapur: STATIONS,
+  Kiphire: STATIONS,
+  Kohima: STATIONS,
+  Longleng: STATIONS,
+  Meluri: STATIONS,
+  Mokokchung: STATIONS,
+  Mon: STATIONS,
+  Niuland: STATIONS,
+  Noklak: STATIONS,
+  Peren: STATIONS,
+  Phek: STATIONS,
+  Shamator: STATIONS,
+  Tsheminyu: STATIONS,
+  Tuensang: STATIONS,
+  Wokha: STATIONS,
+  Zhunheboto: STATIONS,
+};

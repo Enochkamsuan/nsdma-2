@@ -16,7 +16,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import Image from "next/image";
 import {
   WiDaySunny,
   WiCloudy,
@@ -499,25 +498,12 @@ function ForecastSection() {
 
       {/* Day tabs */}
       <div className="mt-5 border-b relative border-white/10">
-        <button
-          onClick={scrollLeft}
-          className="absolute left-2 top-[83%] z-10 -translate-y-1/2 text-white cursor-pointer"
-        >
-          ←
-        </button>
-        <button
-          onClick={scrollRight}
-          className="absolute right-2 top-[83%] z-10 -translate-y-1/2 text-white cursor-pointer"
-        >
-          →
-        </button>
-
-        <div ref={scrollRef} className="flex overflow-x-auto scrollbar-hide">
+        <div className="flex overflow-x-auto scrollbar-hide">
           {forecastDays.map((day, index) => (
             <button
               key={day.day}
               onClick={() => setSelectedDay(index)}
-              className={`min-w-35 px-4 py-4 transition-all ${
+              className={`w-full px-4 py-4 transition-all ${
                 selectedDay === index
                   ? "bg-white/5 border-b-2 border-cyan-400"
                   : "hover:bg-white/5"
@@ -537,7 +523,20 @@ function ForecastSection() {
         <h3 className="mb-4 text-sm font-medium text-slate-300">
           Hourly Forecast
         </h3>
-        <div className="overflow-x-auto scrollbar-hide">
+         <button
+          onClick={scrollLeft}
+          className="absolute left-1 top-[71%] z-10 -translate-y-1/2 text-white cursor-pointer"
+        >
+          ←
+        </button>
+        <button
+          onClick={scrollRight}
+          className="absolute right-1 top-[71%] z-10 -translate-y-1/2 text-white cursor-pointer"
+        >
+          →
+          
+        </button>
+        <div ref={scrollRef}  className="overflow-x-auto scrollbar-hide">
           <div className="flex min-w-max gap-3">
             {currentDay.hourly.map((hour) => {
               const Icon = hour.icon;
@@ -716,7 +715,7 @@ const Landing = () => {
           </div>
         </div>
       </section>
-      <section className="py-16 px-2 sm:px-6 lg:px-16">
+      <section className="pt-16 px-2 sm:px-6 lg:px-16">
         <div className="overflow-hidden">
           <div
             className="flex transition-transform duration-500 ease-in-out"
@@ -768,7 +767,7 @@ const Landing = () => {
             ))}
           </div>
         </div>
-        <div className="flex justify-center gap-2 mt-8">
+        <div className="flex justify-center gap-2 my-8">
           {slides.map((_, i) => (
             <button
               key={i}
@@ -795,7 +794,7 @@ const Landing = () => {
           </div>
         </div>
       </section>
-      <section className="py-16 px-2 sm:px-6 lg:px-16">
+      <section className="pt-16 px-2 sm:px-6 lg:px-16">
         {/* <div className="grid grid-cols-12 gap-4 items-center">
           <div className="col-span-12 lg:col-span-5">
             <ForecastSection />
@@ -810,13 +809,16 @@ const Landing = () => {
             </div>
           </div>
         </div> */}
-        <div className="text-2xl font-extrabold py-3">Weather Radar</div>
+        <div className="text-2xl font-extrabold text-center tracking-widest py-3">Weather Radar</div>
             <div className="flex justify-center">
               <NagalandStationMap
                 weatherByStationId={mockStationWeather}
                 className="w-full h-[95vh]"
               />
             </div>
+      </section>
+      <section className="py-16 px-2 sm:px-6 lg:px-16">
+        <ForecastSection />
       </section>
     </div>
   );
