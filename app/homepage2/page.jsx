@@ -109,18 +109,33 @@ export default function Page() {
   const [selectedStation, setSelectedStation] = useState("DC Office");
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState(null);
 
   useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 60_000);
+    setNow(new Date());
+
+    const id = setInterval(() => {
+      setNow(new Date());
+    }, 60_000);
+
     return () => clearInterval(id);
   }, []);
 
-  const timeStr = now.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  const dayStr = now.toLocaleDateString([], { weekday: "long" });
+  const timeStr = now
+    ? now.toLocaleTimeString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      })
+    : "--:--";
+
+  const dayStr = now
+    ? now.toLocaleDateString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        weekday: "long",
+      })
+    : "Loading...";
 
   const handleSearch = () => {
     setLoading(true);
@@ -146,6 +161,8 @@ export default function Page() {
     handleSearch();
   }, []);
 
+  if (!now) return null;
+
   const card = {
     background: "#1a1d27",
     border: "1px solid #2a2d3e",
@@ -154,171 +171,85 @@ export default function Page() {
   };
 
   return (
-    <main
-      style={{
-        background: "#0f1117",
-        minHeight: "100vh",
-        padding: "24px 28px",
-        color: "#fff",
-        fontFamily: "Inter, sans-serif",
-      }}
-    >
-      <div style={{ display: "flex", gap: 28, marginBottom: 24 }}>
+    <main className="bg-[#0f1117] min-h-screen px-7 py-6 text-white font-sans">
+      <div className="flex mb-6 gap-7">
         {["Today", "Tomorrow", "Next 7days"].map((tab) => (
           <span
             key={tab}
             onClick={() => setActiveTab(tab)}
-            style={{
-              fontSize: 15,
-              cursor: "pointer",
-              paddingBottom: 3,
-              color: activeTab === tab ? "#fff" : "#555870",
-              fontWeight: activeTab === tab ? 700 : 400,
-              borderBottom:
-                activeTab === tab ? "2px solid #fff" : "2px solid transparent",
-              transition: "all 0.2s",
-            }}
+            className={`cursor-pointer text-base pb-1 transition-all duration-200 ${activeTab === tab ? "#fff font-bold border-b-2 border-white" : "#555870 font-normal border-b-2 border-transparent"}`}
           >
             {tab}
           </span>
         ))}
       </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "300px 1fr 280px",
-          gap: 14,
-          marginBottom: 14,
-        }}
-      >
-        <div
-          style={{
-            background: "linear-gradient(135deg, #f97316 0%, #fbbf24 100%)",
-            borderRadius: 20,
-            padding: "20px 22px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            minHeight: 290,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontSize: 13,
-              opacity: 0.9,
-              fontWeight: 500,
-            }}
-          >
-            <span>{dayStr}</span>sss
-            <span>{timeStr}</span>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginTop: 8,
-            }}
-          >
-            <div>
-              <div style={{ fontSize: 60, fontWeight: 800, lineHeight: 1 }}>
-                {weatherData?.temperature ?? "—"}°
-              </div>
-              <div style={{ fontSize: 13, marginTop: 6, opacity: 0.85 }}>
-                Real Feel: {weatherData?.realFeel ?? "—"}°
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-12 items-stretch gap-4 mb-3.5">
+        <div className="md:col-span-3">
+          <div className="bg-linear-to-br from-orange-500 to-amber-400 rounded-[20px] px-5.5 py-5 flex flex-col justify-between h-full">
+            <div className="flex justify-between text-[13px] opacity-90 font-medium">
+              <span>{dayStr}</span>
+              <span>{timeStr}</span>
             </div>
-            <CloudSun size={68} strokeWidth={1.4} />
-          </div>
+            <div className="flex items-center justify-between mt-2">
+              <div>
+                <div className="text-6xl font-extrabold leading-none">
+                  {weatherData?.temperature ?? "—"}°
+                </div>
+                <div className="text-sm mt-1.5 opacity-[0.35]">
+                  Real Feel: {weatherData?.realFeel ?? "—"}°
+                </div>
+              </div>
+              <CloudSun size={68} strokeWidth={1.4} />
+            </div>
 
-          <div
-            style={{
-              marginTop: 14,
-              display: "flex",
-              flexDirection: "column",
-              gap: 7,
-            }}
-          >
-            {[
-              ["Wind", `${weatherData?.wind ?? "—"} km/h`],
-              ["Pressure", `${weatherData?.pressure ?? "—"} MB`],
-              ["Humidity", `${weatherData?.humidity ?? "—"}%`],
-              ["Sunrise", weatherData?.sunrise ?? "—"],
-              ["Sunset", weatherData?.sunset ?? "—"],
-            ].map(([label, val]) => (
+            <div className="flex flex-col gap-2 mt-3.5">
+              {[
+                ["Wind", `${weatherData?.wind ?? "—"} km/h`],
+                ["Pressure", `${weatherData?.pressure ?? "—"} MB`],
+                ["Humidity", `${weatherData?.humidity ?? "—"}%`],
+                ["Sunrise", weatherData?.sunrise ?? "—"],
+                ["Sunset", weatherData?.sunset ?? "—"],
+              ].map(([label, val]) => (
+                <div
+                  className="flex justify-between text-base opacity-90"
+                  key={label}
+                >
+                  <span>{label}</span>
+                  <span className="font-semibold">{val}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="md:col-span-6">
+          <div className="flex items-stretch h-full gap-2.5">
+            {week.map(({ day, temp, Icon }) => (
               <div
-                key={label}
+                className="w-full flex flex-col justify-between h-full"
+                key={day}
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontSize: 13,
-                  opacity: 0.9,
+                  ...card,
                 }}
               >
-                <span>{label}</span>
-                <span style={{ fontWeight: 600 }}>{val}</span>
+                <span className="text-xs text-[#8b8fa8] font-semibold tracking-[1px]">
+                  {day}
+                </span>
+                <Icon size={32} color="#f97316" strokeWidth={1.5} />
+                <span style={{ fontSize: 20, fontWeight: 700 }}>{temp}</span>
               </div>
             ))}
           </div>
         </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(6, 1fr)",
-            gap: 10,
-          }}
-        >
-          {week.map(({ day, temp, Icon }) => (
-            <div
-              key={day}
-              style={{
-                ...card,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "20px 10px",
-                gap: 14,
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 11,
-                  color: "#8b8fa8",
-                  fontWeight: 600,
-                  letterSpacing: 1,
-                }}
-              >
-                {day}
-              </span>
-              <Icon size={32} color="#f97316" strokeWidth={1.5} />
-              <span style={{ fontSize: 20, fontWeight: 700 }}>{temp}</span>
-            </div>
-          ))}
-        </div>
-        <div style={card}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12 }}>
-            Chance Of Rain
-          </h3>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 3,
-              marginBottom: 8,
-            }}
-          >
+        <div className="md:col-span-3" style={card}>
+          <h3 className="font-bold mb-3 text-base">Chance Of Rain</h3>
+          <div className="flex flex-col gap-1 mb-2">
             {["Rainy", "Sunny", "Heavy"].map((l) => (
-              <span key={l} style={{ fontSize: 11, color: "#555870" }}>
+              <span className="text-xs text-[#555870]" key={l}>
                 {l}
               </span>
             ))}
           </div>
-          <div style={{ height: 130 }}>
+          <div className="h-32">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={weatherData?.rain ?? []}>
                 <defs>
@@ -357,22 +288,13 @@ export default function Page() {
           </div>
         </div>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div style={{ ...card, marginTop: 18 }}>
-          <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>
-            Weather Monitoring Station
-          </h2>
-          <div style={{ gridTemplateColumns: "1fr 1fr auto", gap: 14 }}>
+      <div className="grid grid-cols-1 items-stretch md:grid-cols-3 gap-3 min-h-[420px]">
+        <div className="h-full">
+          <div className="h-full" style={{ ...card }}>
+          <h2 className="text-sm font-bold mb-4">Weather Monitoring Station</h2>
+          <div>
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: 12,
-                  color: "#8b8fa8",
-                  marginBottom: 8,
-                }}
-              >
+              <label className="block text-xs text-[#8b8fa8] mb-2">
                 District
               </label>
               <select
@@ -381,16 +303,7 @@ export default function Page() {
                   setSelectedDistrict(e.target.value);
                   setSelectedStation(districts[e.target.value][0]);
                 }}
-                style={{
-                  width: "100%",
-                  background: "#111420",
-                  color: "#fff",
-                  border: "1px solid #2a2d3e",
-                  borderRadius: 12,
-                  padding: "12px 16px",
-                  fontSize: 14,
-                  outline: "none",
-                }}
+                className="w-full bg-[#111420] border border-[#2a2d3e] rounded-xl outline-none text-sm p-3"
               >
                 {Object.keys(districts).map((d) => (
                   <option key={d} value={d}>
@@ -400,29 +313,13 @@ export default function Page() {
               </select>
             </div>
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: 12,
-                  color: "#8b8fa8",
-                  marginBottom: 8,
-                }}
-              >
+              <label className="block text-xs text-[#8b8fa8] mb-2">
                 Station
               </label>
               <select
                 value={selectedStation}
                 onChange={(e) => setSelectedStation(e.target.value)}
-                style={{
-                  width: "100%",
-                  background: "#111420",
-                  color: "#fff",
-                  border: "1px solid #2a2d3e",
-                  borderRadius: 12,
-                  padding: "12px 16px",
-                  fontSize: 14,
-                  outline: "none",
-                }}
+                className="w-full bg-[#111420] border border-[#2a2d3e] rounded-xl outline-none text-sm p-3"
               >
                 {(districts[selectedDistrict] ?? []).map((s) => (
                   <option key={s} value={s}>
@@ -435,115 +332,59 @@ export default function Page() {
               <button
                 onClick={handleSearch}
                 disabled={loading}
-                style={{
-                  background: "#38bdf8",
-                  color: "#000",
-                  border: "none",
-                  borderRadius: 12,
-                  padding: "12px 28px",
-                  fontWeight: 700,
-                  fontSize: 14,
-                  cursor: loading ? "not-allowed" : "pointer",
-                  opacity: loading ? 0.6 : 1,
-                  whiteSpace: "nowrap",
-                }}
+                className={`bg-[#38bdf8] text-black border-none rounded-lg px-3 py-2 font-bold text-sm ${loading ? "cursor-not-allowed opacity-60" : "cursor-pointer opacity-100"}`}
               >
                 {loading ? "Loading…" : "Search Weather"}
               </button>
             </div>
           </div>
         </div>
-        <div
-          className=" row-span-2 rounded-2xl overflow-hidden relative flex flex-col justify-between p-5 border border-[#2a2d3e] bg-cover bg-center"
+        </div>
+        <div className="rounded-2xl overflow-hidden relative flex flex-col justify-between p-5 border border-[#2a2d3e] bg-cover bg-center h-full"
           style={{ backgroundImage: `url(${city.src})` }}
         >
-          <p
-            style={{
-              fontSize: 18,
-              fontWeight: 700,
-              lineHeight: 1.35,
-            }}
-          >
+          <p className="text-lg font-bold leading-7">
             Explore global map of wind weather and ocean condition
           </p>
-          <button
-            style={{
-              background: "rgba(255,255,255,0.95)",
-              color: "#111",
-              border: "none",
-              borderRadius: 999,
-              padding: "11px 22px",
-              fontWeight: 700,
-              fontSize: 13,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              width: "fit-content",
-              letterSpacing: 0.5,
-            }}
-          >
+          <button className="bg-white/95 text-[#111] border-0 rounded-full px-5.5 py-2.75 font-bold text-[13px] cursor-pointer flex items-center gap-2 w-fit tracking-[0.5px]">
             GET STARTED <ArrowRight size={14} />
           </button>
         </div>
-        <div>
-          <h2 style={{ fontSize: 17, fontWeight: 700, marginBottom: 14 }}>
-            Today's Overview
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 items-center space-y-2 gap-3">
+        <div className="h-full flex flex-col">
+          <h2 className="text-base font-bold mb-3.5">Today's Overview</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-3">
             <div
+              className="flex flex-col h-full gap-3"
               style={{
                 ...card,
-                display: "flex",
-                flexDirection: "column",
-                gap: 12,
               }}
             >
-              <span style={{ fontSize: 12, color: "#8b8fa8" }}>
-                Wind Status
-              </span>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  gap: 3,
-                  height: 55,
-                }}
-              >
+              <span className="text-xs text-[#8b8fa8]">Wind Status</span>
+              <div className="flex items-end h-14 gap-1">
                 {windBars.map((h, i) => (
                   <div
                     key={i}
+                    className="w-1.5 rounded-[3px] bg-orange-500"
                     style={{
-                      width: 6,
-                      borderRadius: 3,
                       height: `${(h / 13) * 100}%`,
-                      background: "#f97316",
                       opacity: 0.7 + (i % 3) * 0.1,
                     }}
                   />
                 ))}
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-end",
-                }}
-              >
+              <div className="flex justify-between items-end">
                 <div>
-                  <span style={{ fontSize: 26, fontWeight: 800 }}>
+                  <span className="text-3xl font-extrabold">
                     {weatherData?.wind ?? "—"}
                   </span>
-                  <span
-                    style={{ fontSize: 12, color: "#8b8fa8", marginLeft: 4 }}
-                  >
+                  <span className="text-xs text-[#8b8fa8] ml-1">
                     km/h
                   </span>
                 </div>
-                <span style={{ fontSize: 11, color: "#555870" }}>6:20 AM</span>
+                <span className="text-xs text-[#555870]">6:20 AM</span>
               </div>
             </div>
-            <div className="flex flex-col bg-[#1a1d27] border border-[#2a2d3e] rounded-2xl p-5">
+            <div className="flex flex-col h-full bg-[#1a1d27] border border-[#2a2d3e] rounded-2xl p-5">
               <span className="text-xs text-[#8b8fa8] mb-1">UV Index</span>
               <div className="flex flex-1 justify-center">
                 <UVArc value={weatherData?.uv ?? 5.5} />
@@ -558,7 +399,7 @@ export default function Page() {
               </div>
             </div>
             {/* Humidity */}
-            <div style={card}>
+            <div className="h-full" style={card}>
               <span style={{ fontSize: 12, color: "#8b8fa8" }}>Humidity</span>
               <div
                 style={{
@@ -578,7 +419,7 @@ export default function Page() {
               </p>
             </div>
             {/* Visibility */}
-            <div style={card}>
+            <div className="h-full" style={card}>
               <span style={{ fontSize: 12, color: "#8b8fa8" }}>Visibility</span>
               <div
                 style={{
