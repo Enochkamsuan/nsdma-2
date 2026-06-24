@@ -16,189 +16,28 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import {
-  WiDaySunny,
-  WiCloudy,
-  WiRain,
-  WiSunrise,
-  WiSunset,
-} from "react-icons/wi";
+import { WiSunrise, WiSunset } from "react-icons/wi";
 import WeatherAnimation from "../component/weatherAnimation/page";
 import NagalandStationMap from "../component/nagalandStationMap";
-import { mockStationWeather } from "../data/data";
+import {
+  mockStationWeather,
+  districts,
+  districtWeatherData,
+  DEFAULT_DISTRICT,
+  DEFAULT_STATION,
+  buildDailyForecast,
+  sunTimes,
+  rainfallData,
+  metricsData,
+  METRIC_META,
+  forecastDays,
+} from "../data/data";
 
-const dailyForecast = [
-  { day: "Today", high: 22, low: 17, condition: "Rain", icon: WiRain },
-  { day: "Tomorrow", high: 25, low: 18, condition: "Cloudy", icon: WiCloudy },
-  { day: "Tues", high: 28, low: 19, condition: "Sunny", icon: WiDaySunny },
-];
-
-const sunTimes = {
-  sunrise: "5:12 AM",
-  sunset: "6:48 PM",
-};
-
-const weatherData = [
-  {
-    district: "Chumoukedima",
-    condition: "Cloudy",
-    high: 22,
-    low: 14,
-    icon: "☁️",
-  },
-  { district: "Dimapur", condition: "Sunny", high: 31, low: 22, icon: "☀️" },
-  { district: "Kiphire", condition: "Rain", high: 24, low: 17, icon: "🌧️" },
-  { district: "Kohima", condition: "Cloudy", high: 21, low: 13, icon: "⛅" },
-  { district: "Longleng", condition: "Rain", high: 26, low: 19, icon: "🌧️" },
-  { district: "Meluri", condition: "Cloudy", high: 25, low: 16, icon: "☁️" },
-  {
-    district: "Mokokchung",
-    condition: "Cloudy",
-    high: 23,
-    low: 15,
-    icon: "☁️",
-  },
-  { district: "Mon", condition: "Rain", high: 27, low: 20, icon: "🌧️" },
-  { district: "Niuland", condition: "Sunny", high: 30, low: 21, icon: "☀️" },
-  { district: "Noklak", condition: "Cloudy", high: 22, low: 15, icon: "☁️" },
-  { district: "Peren", condition: "Rain", high: 25, low: 18, icon: "🌧️" },
-  { district: "Phek", condition: "Cloudy", high: 21, low: 12, icon: "⛅" },
-  { district: "Shamator", condition: "Rain", high: 24, low: 17, icon: "🌧️" },
-  { district: "Tsheminyu", condition: "Cloudy", high: 23, low: 14, icon: "☁️" },
-  { district: "Tuensang", condition: "Rain", high: 22, low: 15, icon: "🌧️" },
-  { district: "Wokha", condition: "Cloudy", high: 25, low: 16, icon: "☁️" },
-  { district: "Zhunheboto", condition: "Sunny", high: 29, low: 20, icon: "☀️" },
-];
-
-const rainfallData = [
-  { month: "Jan", mm: 12 },
-  { month: "Feb", mm: 18 },
-  { month: "Mar", mm: 45 },
-  { month: "Apr", mm: 110 },
-  { month: "May", mm: 220 },
-  { month: "Jun", mm: 380 },
-  { month: "Jul", mm: 420 },
-  { month: "Aug", mm: 390 },
-  { month: "Sep", mm: 280 },
-  { month: "Oct", mm: 140 },
-  { month: "Nov", mm: 35 },
-  { month: "Dec", mm: 10 },
-];
-
-const metricsRaw = [
-  { day: "Mon", temp: 24, humidity: 78, precip: 12, wind: 8, aqi: 42 },
-  { day: "Tue", temp: 25, humidity: 74, precip: 5, wind: 10, aqi: 38 },
-  { day: "Wed", temp: 23, humidity: 81, precip: 22, wind: 14, aqi: 55 },
-  { day: "Thu", temp: 22, humidity: 85, precip: 30, wind: 18, aqi: 61 },
-  { day: "Fri", temp: 26, humidity: 70, precip: 4, wind: 9, aqi: 47 },
-  { day: "Sat", temp: 27, humidity: 65, precip: 0, wind: 7, aqi: 35 },
-  { day: "Sun", temp: 25, humidity: 72, precip: 8, wind: 11, aqi: 40 },
-];
-
-const METRIC_META = {
-  temp: {
-    label: "Temperature",
-    color: "#fbbf24",
-    unit: "°C",
-    min: 15,
-    max: 35,
-  },
-  humidity: {
-    label: "Humidity",
-    color: "#38bdf8",
-    unit: "%",
-    min: 0,
-    max: 100,
-  },
-  precip: {
-    label: "Precipitation",
-    color: "#818cf8",
-    unit: "mm",
-    min: 0,
-    max: 50,
-  },
-  wind: {
-    label: "Wind Speed",
-    color: "#2dd4bf",
-    unit: "km/h",
-    min: 0,
-    max: 40,
-  },
-  aqi: { label: "AQI", color: "#fb7185", unit: "", min: 0, max: 150 },
-};
-
-const normalize = (key, value) => {
-  const { min, max } = METRIC_META[key];
-  return Math.round(((value - min) / (max - min)) * 100);
-};
-
-const metricsData = metricsRaw.map((d) => ({
-  day: d.day,
-  raw: d,
-  temp: normalize("temp", d.temp),
-  humidity: normalize("humidity", d.humidity),
-  precip: normalize("precip", d.precip),
-  wind: normalize("wind", d.wind),
-  aqi: normalize("aqi", d.aqi),
-}));
-
-const ICONS = [Sun, CloudSun, CloudRain, Moon];
-
-const createHourlyData = (dayIndex = 0) =>
-  Array.from({ length: 24 }, (_, hour) => {
-    const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-    const period = hour < 12 ? "AM" : "PM";
-    const seed = dayIndex * 24 + hour;
-
-    return {
-      time: `${displayHour} ${period}`,
-      temp: 22 + ((seed * 7 + 3) % 10),
-      rain: (seed * 13 + 5) % 100,
-      wind: 3 + ((seed * 11 + 7) % 15),
-      icon: ICONS[(seed * 3 + dayIndex) % ICONS.length],
-    };
-  });
-
-const forecastDays = [
-  { day: "Today", high: 31, low: 22, hourly: createHourlyData(0) },
-  { day: "Thu", high: 30, low: 21, hourly: createHourlyData(1) },
-  { day: "Fri", high: 29, low: 20, hourly: createHourlyData(2) },
-  { day: "Sat", high: 27, low: 19, hourly: createHourlyData(3) },
-  { day: "Sun", high: 28, low: 20, hourly: createHourlyData(4) },
-  { day: "Mon", high: 30, low: 21, hourly: createHourlyData(5) },
-  { day: "Tue", high: 32, low: 23, hourly: createHourlyData(6) },
-  { day: "Wed", high: 31, low: 22, hourly: createHourlyData(7) },
-];
-
-const STATIONS = [
-  "DC Office",
-  "Dhansiripar",
-  "Medzhephima",
-  "Patkai Christian College",
-  "Pherima, Crucifix Pilgrim",
-  "Piphema Council Hall",
-  "Razaphe Bawe (Eden Ram)",
-  "Zoological Park, Nagaland",
-];
-
-const districts = {
-  Chumoukedima: STATIONS,
-  Dimapur: STATIONS,
-  Kiphire: STATIONS,
-  Kohima: STATIONS,
-  Longleng: STATIONS,
-  Meluri: STATIONS,
-  Mokokchung: STATIONS,
-  Mon: STATIONS,
-  Niuland: STATIONS,
-  Noklak: STATIONS,
-  Peren: STATIONS,
-  Phek: STATIONS,
-  Shamator: STATIONS,
-  Tsheminyu: STATIONS,
-  Tuensang: STATIONS,
-  Wokha: STATIONS,
-  Zhunheboto: STATIONS,
+const ICON_MAP = {
+  sun: Sun,
+  "cloud-sun": CloudSun,
+  "cloud-rain": CloudRain,
+  moon: Moon,
 };
 
 function RainfallTooltip({ active, payload, label }) {
@@ -523,7 +362,7 @@ function ForecastSection() {
         <h3 className="mb-4 text-sm font-medium text-slate-300">
           Hourly Forecast
         </h3>
-         <button
+        <button
           onClick={scrollLeft}
           className="absolute left-1 top-[71%] z-10 -translate-y-1/2 text-white cursor-pointer"
         >
@@ -534,12 +373,11 @@ function ForecastSection() {
           className="absolute right-1 top-[71%] z-10 -translate-y-1/2 text-white cursor-pointer"
         >
           →
-          
         </button>
-        <div ref={scrollRef}  className="overflow-x-auto scrollbar-hide">
+        <div ref={scrollRef} className="overflow-x-auto scrollbar-hide">
           <div className="flex min-w-max gap-3">
             {currentDay.hourly.map((hour) => {
-              const Icon = hour.icon;
+              const Icon = ICON_MAP[hour.iconKey];
               return (
                 <div
                   key={hour.time}
@@ -567,14 +405,15 @@ function ForecastSection() {
 }
 
 const Landing = () => {
-  const [district, setDistrict] = useState("");
-  const [station, setStation] = useState("");
+  const [district, setDistrict] = useState(DEFAULT_DISTRICT);
+  const [station, setStation] = useState(DEFAULT_STATION);
   const [current, setCurrent] = useState(0);
 
   const slides = [];
-  for (let i = 0; i < weatherData.length; i += 3) {
-    slides.push(weatherData.slice(i, i + 3));
+  for (let i = 0; i < districtWeatherData.length; i += 3) {
+    slides.push(districtWeatherData.slice(i, i + 3));
   }
+  const dailyForecast = buildDailyForecast(district || DEFAULT_DISTRICT);
 
   const handleDistrictChange = (e) => {
     setDistrict(e.target.value);
@@ -609,7 +448,6 @@ const Landing = () => {
                 district of Nagaland. Pick your district and station to begin.
               </div>
             </div>
-
             <div className="w-full max-w-xl flex flex-col gap-4">
               <div className="bg-white rounded-md p-3">
                 <form onSubmit={handleSubmit}>
@@ -628,7 +466,6 @@ const Landing = () => {
                         ))}
                       </select>
                     </div>
-
                     <div className="flex-1">
                       <select
                         value={station}
@@ -642,14 +479,13 @@ const Landing = () => {
                             : "Select District First"}
                         </option>
                         {district &&
-                          districts[district].map((item) => (
+                          districts[district]?.map((item) => (
                             <option key={item} value={item}>
                               {item}
                             </option>
                           ))}
                       </select>
                     </div>
-
                     <button
                       type="submit"
                       disabled={!district || !station}
@@ -660,10 +496,15 @@ const Landing = () => {
                   </div>
                 </form>
               </div>
-              {/* Daily forecast card */}
               <div>
-                <div className="text-sm font-semibold text-white mb-2">
-                  3-Day Forecast
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-sm font-semibold text-white">
+                    3-Day Forecast
+                  </div>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#fc9e47fa]/90 px-2.5 py-1 text-[11px] font-semibold text-slate-900">
+                    <CiLocationOn className="text-sm" />
+                    {district || DEFAULT_DISTRICT}
+                  </span>
                 </div>
                 <div className="flex gap-2 z-10 rounded-md">
                   {dailyForecast.map((day) => (
@@ -685,6 +526,7 @@ const Landing = () => {
                   ))}
                 </div>
               </div>
+
               <div className="relative z-10 bg-white/90 rounded-md p-3">
                 <div className="text-sm font-semibold text-gray-700 mb-2">
                   Sun Times
@@ -795,27 +637,15 @@ const Landing = () => {
         </div>
       </section>
       <section className="pt-16 px-2 sm:px-6 lg:px-16">
-        {/* <div className="grid grid-cols-12 gap-4 items-center">
-          <div className="col-span-12 lg:col-span-5">
-            <ForecastSection />
-          </div>
-          <div className="col-span-12 lg:col-span-7">
-            <div className="text-2xl font-extrabold py-3">Weather Radar</div>
-            <div className="flex justify-center">
-              <NagalandStationMap
-                weatherByStationId={mockStationWeather}
-                className="w-full h-[95vh]"
-              />
-            </div>
-          </div>
-        </div> */}
-        <div className="text-2xl font-extrabold text-center tracking-widest py-3">Weather Radar</div>
-            <div className="flex justify-center">
-              <NagalandStationMap
-                weatherByStationId={mockStationWeather}
-                className="w-full h-[95vh]"
-              />
-            </div>
+        <div className="text-2xl font-extrabold text-center tracking-widest py-3">
+          Weather Radar
+        </div>
+        <div className="flex justify-center">
+          <NagalandStationMap
+            weatherByStationId={mockStationWeather}
+            className="w-full h-[95vh]"
+          />
+        </div>
       </section>
       <section className="py-16 px-2 sm:px-6 lg:px-16">
         <ForecastSection />
