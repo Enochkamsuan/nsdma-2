@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import hero from "../assets/images/nagaland-hero.jpg";
 import { CiLocationOn } from "react-icons/ci";
 import { FaSearch, FaTint, FaWind } from "react-icons/fa";
@@ -26,11 +26,12 @@ import {
   DEFAULT_DISTRICT,
   DEFAULT_STATION,
   buildDailyForecast,
+  buildForecastDays,
   sunTimes,
   rainfallData,
   metricsData,
   METRIC_META,
-  forecastDays,
+  CLIMATE_SCOPE_LABEL,
 } from "../data/data";
 
 const ICON_MAP = {
@@ -39,6 +40,15 @@ const ICON_MAP = {
   "cloud-rain": CloudRain,
   moon: Moon,
 };
+
+function DistrictBadge({ district }) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full bg-[#fc9e47fa]/90 px-2.5 py-1 text-[11px] font-semibold text-slate-900">
+      <CiLocationOn className="text-sm" />
+      {district}
+    </span>
+  );
+}
 
 function RainfallTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
@@ -318,7 +328,7 @@ function AirQualityCard() {
   );
 }
 
-function ForecastSection() {
+function ForecastSection({ district, forecastDays }) {
   const [selectedDay, setSelectedDay] = useState(0);
   const scrollRef = useRef(null);
 
@@ -331,16 +341,23 @@ function ForecastSection() {
 
   return (
     <div className="rounded-3xl border border-white/10 bg-slate-900/90 backdrop-blur-xl overflow-hidden">
-      <div className="px-6 pt-6">
-        <h2 className="text-xl font-semibold text-white">Next 8 Days</h2>
+      <div className="px-6 pt-6 flex items-center justify-between gap-3 flex-wrap">
+        <div>
+          <h2 className="text-xl font-semibold text-white">
+            8-Day Hourly Outlook
+          </h2>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Hour-by-hour temperature, rain chance, and wind for your selected
+            station
+          </p>
+        </div>
+        <DistrictBadge district={district} />
       </div>
-
-      {/* Day tabs */}
       <div className="mt-5 border-b relative border-white/10">
         <div className="flex overflow-x-auto scrollbar-hide">
           {forecastDays.map((day, index) => (
             <button
-              key={day.day}
+              key={`${day.day}-${index}`}
               onClick={() => setSelectedDay(index)}
               className={`w-full px-4 py-4 transition-all ${
                 selectedDay === index
@@ -349,6 +366,7 @@ function ForecastSection() {
               }`}
             >
               <p className="text-xs text-slate-400">{day.day}</p>
+              <p className="text-[10px] text-slate-600">{day.date}</p>
               <div className="mt-2 flex justify-center gap-2">
                 <span className="font-semibold text-white">{day.high}°</span>
                 <span className="text-slate-500">{day.low}°</span>
@@ -360,7 +378,7 @@ function ForecastSection() {
 
       <div className="p-6">
         <h3 className="mb-4 text-sm font-medium text-slate-300">
-          Hourly Forecast
+          Hourly Forecast — {currentDay.day}, {currentDay.date}
         </h3>
         <button
           onClick={scrollLeft}
@@ -408,12 +426,26 @@ const Landing = () => {
   const [district, setDistrict] = useState(DEFAULT_DISTRICT);
   const [station, setStation] = useState(DEFAULT_STATION);
   const [current, setCurrent] = useState(0);
+  const [lastSearched, setLastSearched] = useState(
+    `${DEFAULT_STATION}, ${DEFAULT_DISTRICT}`,
+  );
 
   const slides = [];
   for (let i = 0; i < districtWeatherData.length; i += 3) {
     slides.push(districtWeatherData.slice(i, i + 3));
   }
-  const dailyForecast = buildDailyForecast(district || DEFAULT_DISTRICT);
+
+  const activeDistrict = district || DEFAULT_DISTRICT;
+
+  const dailyForecast = useMemo(
+    () => buildDailyForecast(activeDistrict),
+    [activeDistrict],
+  );
+
+  const forecastDays = useMemo(
+    () => buildForecastDays(activeDistrict),
+    [activeDistrict],
+  );
 
   const handleDistrictChange = (e) => {
     setDistrict(e.target.value);
@@ -422,7 +454,7 @@ const Landing = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ district, station });
+    setLastSearched(`${station}, ${district}`);
   };
 
   return (
@@ -448,6 +480,7 @@ const Landing = () => {
                 district of Nagaland. Pick your district and station to begin.
               </div>
             </div>
+
             <div className="w-full max-w-xl flex flex-col gap-4">
               <div className="bg-white rounded-md p-3">
                 <form onSubmit={handleSubmit}>
@@ -466,6 +499,7 @@ const Landing = () => {
                         ))}
                       </select>
                     </div>
+
                     <div className="flex-1">
                       <select
                         value={station}
@@ -486,6 +520,7 @@ const Landing = () => {
                           ))}
                       </select>
                     </div>
+
                     <button
                       type="submit"
                       disabled={!district || !station}
@@ -495,16 +530,21 @@ const Landing = () => {
                     </button>
                   </div>
                 </form>
+                {lastSearched && (
+                  <p className="mt-2 text-xs text-gray-500">
+                    Showing weather for{" "}
+                    <span className="font-medium text-gray-700">
+                      {lastSearched}
+                    </span>
+                  </p>
+                )}
               </div>
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="text-sm font-semibold text-white">
                     3-Day Forecast
                   </div>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#fc9e47fa]/90 px-2.5 py-1 text-[11px] font-semibold text-slate-900">
-                    <CiLocationOn className="text-sm" />
-                    {district || DEFAULT_DISTRICT}
-                  </span>
+                  <DistrictBadge district={activeDistrict} />
                 </div>
                 <div className="flex gap-2 z-10 rounded-md">
                   {dailyForecast.map((day) => (
@@ -558,6 +598,15 @@ const Landing = () => {
         </div>
       </section>
       <section className="pt-16 px-2 sm:px-6 lg:px-16">
+        <div className="mb-6">
+          <h2 className="text-2xl font-extrabold text-white">
+            All Districts at a Glance
+          </h2>
+          <p className="text-sm text-slate-400 mt-1">
+            Current conditions for every district in Nagaland — independent of
+            the district selected above
+          </p>
+        </div>
         <div className="overflow-hidden">
           <div
             className="flex transition-transform duration-500 ease-in-out"
@@ -622,6 +671,10 @@ const Landing = () => {
             />
           ))}
         </div>
+        <div className="mb-4">
+          <h2 className="text-2xl font-extrabold text-white">Climate Trends</h2>
+          <p className="text-sm text-slate-400 mt-1">{CLIMATE_SCOPE_LABEL}</p>
+        </div>
         <div className="w-full mt-3">
           <div className="grid grid-cols-1 md:grid-cols-3 items-stretch gap-3">
             <div className="h-85">
@@ -637,8 +690,13 @@ const Landing = () => {
         </div>
       </section>
       <section className="pt-16 px-2 sm:px-6 lg:px-16">
-        <div className="text-2xl font-extrabold text-center tracking-widest py-3">
-          Weather Radar
+        <div className="text-center mb-2">
+          <h2 className="text-2xl font-extrabold tracking-widest">
+            Live Station Map
+          </h2>
+          <p className="text-sm text-slate-400 mt-1">
+            Hover a marker to see that station's current high/low and conditions
+          </p>
         </div>
         <div className="flex justify-center">
           <NagalandStationMap
@@ -648,7 +706,10 @@ const Landing = () => {
         </div>
       </section>
       <section className="py-16 px-2 sm:px-6 lg:px-16">
-        <ForecastSection />
+        <ForecastSection
+          district={activeDistrict}
+          forecastDays={forecastDays}
+        />
       </section>
     </div>
   );
