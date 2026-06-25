@@ -29,7 +29,7 @@ const ICON_MAP = {
 
 function DistrictBadge({ district }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-[#fc9e47fa]/90 px-2.5 py-1 text-[11px] font-semibold text-slate-900">
+    <span className="inline-flex items-center gap-1 rounded-full bg-[#fc9e47fa]/90 px-2.5 py-1 text-[11px] font-semibold text-white">
       <CiLocationOn className="text-sm" />
       {district}
     </span>
@@ -54,7 +54,7 @@ function ForecastSection({ district, forecastDays }) {
           <h2 className="text-xl font-semibold text-white">
             8-Day Hourly Outlook
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-white mt-0.5">
             Hour-by-hour temperature, rain chance, and wind for your selected
             station
           </p>
@@ -73,11 +73,11 @@ function ForecastSection({ district, forecastDays }) {
                   : "hover:bg-white/5"
               }`}
             >
-              <p className="text-xs text-slate-400">{day.day}</p>
-              <p className="text-[10px] text-slate-600">{day.date}</p>
+              <p className="text-xs text-slate-300">{day.day}</p>
+              <p className="text-[10px] text-slate-300">{day.date}</p>
               <div className="mt-2 flex justify-center gap-2">
                 <span className="font-semibold text-white">{day.high}°</span>
-                <span className="text-slate-500">{day.low}°</span>
+                <span className="text-slate-300">{day.low}°</span>
               </div>
             </button>
           ))}
@@ -193,7 +193,9 @@ const Landing = () => {
                 <form onSubmit={handleSubmit}>
                   <div className="flex flex-col md:flex-row gap-3 items-stretch">
                     <div className="flex-1">
+                      <label htmlFor="district" aria-label="Select District" />
                       <select
+                      id="district"
                         value={district}
                         onChange={handleDistrictChange}
                         className="w-full rounded-md border border-gray-300 px-3 py-3 text-gray-900 bg-white"
@@ -208,7 +210,9 @@ const Landing = () => {
                     </div>
 
                     <div className="flex-1">
+                      <label htmlFor="station" aria-label="Select Station" />
                       <select
+                      id="station"
                         value={station}
                         onChange={(e) => setStation(e.target.value)}
                         disabled={!district}
@@ -230,6 +234,7 @@ const Landing = () => {
 
                     <button
                       type="submit"
+                      aria-label="search"
                       disabled={!district || !station}
                       className="text-black transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
@@ -368,9 +373,10 @@ const Landing = () => {
         <div className="flex justify-center gap-2 my-8">
           {slides.map((_, i) => (
             <button
+            aria-label={`go to slide ${i+1}`}
               key={i}
               onClick={() => setCurrent(i)}
-              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+              className={`h-6 rounded-full transition-all duration-300 cursor-pointer ${
                 current === i
                   ? "w-10 bg-cyan-500"
                   : "w-2 bg-slate-600 hover:bg-slate-500"

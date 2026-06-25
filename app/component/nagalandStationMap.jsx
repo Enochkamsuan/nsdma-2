@@ -16,7 +16,7 @@ const NagalandStationMap = ({ weatherByStationId, className }) => {
 
   return (
     <div className={wrapperClassName}>
-      <img src="/map/map.svg" className="w-full h-full" />
+      <img src="/map/map.svg" className="w-full h-full" alt="Nagaland-state-map-with-weatherstations" />
       <svg
         viewBox={NAGALAND_STATION_VIEWBOX}
         className="absolute inset-0 w-full h-full"

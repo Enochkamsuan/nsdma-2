@@ -57,18 +57,19 @@ const Footer = () => {
                   <div className="text-base font-bold">Social Links:</div>
                   <div className="flex items-center gap-4 mt-3">
                     <a
+                    aria-label="visit-facebook"
                       href="/"
                       className="h-10 w-10 rounded-full bg-[#3b5998] flex items-center justify-center hover:opacity-90 transition"
                     >
                       <FaFacebookF />
                     </a>
-                    <a
+                    <a aria-label="visit-twitter"
                       href="/"
                       className="h-10 w-10 rounded-full bg-[#03a9f4] flex items-center justify-center hover:opacity-90 transition"
                     >
                       <FaTwitter />
                     </a>
-                    <a
+                    <a aria-label="visit-youtube"
                       href="/"
                       className="h-10 w-10 rounded-full bg-[#ff0000] flex items-center justify-center hover:opacity-90 transition"
                     >

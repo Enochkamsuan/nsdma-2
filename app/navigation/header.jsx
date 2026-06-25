@@ -49,13 +49,13 @@ export default function Header() {
           <div className="flex flex-1 items-center justify-between">
             <Link href="/" className=" block sm:hidden">
               <div className="shrink-0 items-center">
-                <Image src={logo} width={300} height={200} alt="logo" />
+                <Image src={logo} width={320} height={36} alt="logo" />
               </div>
             </Link>
 
             <Link href="/" className="hidden sm:block">
               <div className="shrink-0 items-center">
-                <Image src={logo} width={600} height={900} alt="logo" />
+                <Image src={logo} width={640} height={72} alt="logo" />
               </div>
             </Link>
 
