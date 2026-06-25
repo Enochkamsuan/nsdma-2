@@ -15,6 +15,7 @@ import {
 import { ResponsiveContainer, AreaChart, Area, XAxis, Tooltip } from "recharts";
 import { districts } from "./mockdata";
 import city from "../assets/images/city.jpg";
+import NalandStationMap from "../component/nagalandStationMap"
 
 const week = [
   { day: "SAT", temp: "10°", Icon: CloudSun },

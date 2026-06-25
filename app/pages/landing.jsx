@@ -96,7 +96,7 @@ function MetricsTooltip({ active, payload, label }) {
   );
 }
 
-function ChartCard({ title, subtitle, children }) {
+ function ChartCard({ title, subtitle, children }) {
   return (
     <div className="relative h-full overflow-hidden rounded-3xl bg-linear-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl border border-white/10 p-5 shadow-xl shadow-black/30 flex flex-col">
       <div className="flex items-start justify-between">
@@ -462,8 +462,7 @@ const Landing = () => {
       <section>
         <div
           style={{ backgroundImage: `url(${hero.src})` }}
-          className="min-h-[80vh] bg-cover bg-center relative bg-no-repeat after:absolute after:content-[''] after:bg-black/50 after:inset-0 after:z-0 px-2 sm:px-6 lg:px-16"
-        >
+          className="min-h-[80vh] bg-cover bg-center relative bg-no-repeat after:absolute after:content-[''] after:bg-black/50 after:inset-0 after:z-0 px-2 sm:px-6 lg:px-16">
           <WeatherAnimation condition={dailyForecast[0]?.condition} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 py-4 md:py-16 items-center relative z-10">
             <div className="max-w-xl">
