@@ -23,6 +23,7 @@
   --accent-teal: #14b8a6;
 }
 
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
