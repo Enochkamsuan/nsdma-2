@@ -23,7 +23,6 @@
   --accent-teal: #14b8a6;
 }
 
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -54,6 +53,61 @@
   --animate-pulse-dot: pulse-dot 1.5s ease-in-out infinite;
 }
 
+/* ============================================================
+   HOMEPAGE-3 DASHBOARD THEME TOKENS
+   Registers the extra color/animation names homepage-3's
+   components use (text-aqua, text-sun, bg-storm, animate-rise,
+   etc.) as real Tailwind utilities. These names are new and
+   unused elsewhere in the app, so registering them globally is
+   safe — they don't collide with or override any existing
+   token (--color-primary, --color-foreground, --color-border,
+   --color-muted-foreground are deliberately NOT touched here
+   because app/advisories and others already define/use those
+   for a light theme).
+   ============================================================ */
+@theme inline {
+  --color-aqua: var(--accent-blue);
+  --color-sun: var(--accent-yellow);
+  --color-rain: #3b82f6;
+  --color-storm: #a78bfa;
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+  --color-glass-border: var(--border-card);
+
+  --font-display: var(--font-playfair), Georgia, serif;
+
+  --animate-rise: rise 0.6s ease both;
+  --animate-float: float 4s ease-in-out infinite;
+  --animate-float-slow: float 8s ease-in-out infinite;
+  --animate-glow-pulse: glow-pulse 6s ease-in-out infinite;
+  --animate-drift: drift 60s linear infinite;
+  --animate-marker-pulse: marker-pulse 2.2s ease-out infinite;
+  --animate-scale-in: scale-in 0.18s ease-out both;
+}
+
+/* ------------------------------------------------------------
+   Scoped overrides for homepage-3 only.
+   `text-foreground`, `text-muted-foreground`, `bg-primary`,
+   `text-primary`, `border-border` already exist as global
+   Tailwind utilities (light-theme values, used by app/advisories
+   and others). Rather than redefining those tokens globally
+   (which would break the light pages), homepage-3's root <main>
+   carries the `.hp3` class, and these custom properties are
+   re-declared *inside* that scope only. Because Tailwind's
+   utility classes read colors via `var(--color-x)` at the point
+   of use, and CSS variables cascade, this swaps the resolved
+   color for any `text-foreground`, `bg-primary`, etc. utility
+   used inside .hp3 — without changing the variable anywhere
+   else in the app.
+   ------------------------------------------------------------ */
+.hp3 {
+  --color-foreground: var(--text-primary);
+  --color-muted-foreground: var(--text-secondary);
+  --color-border: var(--border-card);
+  --color-primary: var(--accent-blue);
+  --color-primary-foreground: #04111f;
+}
+
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -61,6 +115,136 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* ============================================================
+   HOMEPAGE-3 GLASS-MORPHISM CARD SYSTEM
+   `.glass` = standard panel (stat cards, district cards, alert
+   cards, forecast pills). `.glass-strong` = larger hero/map/chart
+   panels with a touch more contrast + blur, matching the PDF.
+   ============================================================ */
+.glass {
+  background-color: color-mix(in srgb, var(--bg-card) 65%, transparent);
+  border: 1px solid var(--border-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.03) inset,
+    0 6px 18px -6px rgba(0, 0, 0, 0.55);
+}
+
+.glass-strong {
+  background-color: color-mix(in srgb, var(--bg-card) 80%, transparent);
+  border: 1px solid var(--border-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
+    0 10px 30px -10px rgba(0, 0, 0, 0.65);
+}
+
+.card-hover {
+  transition: transform 0.25s ease, border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent-blue) 40%, var(--border-card));
+  background-color: var(--bg-card-hover);
+}
+
+.text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    var(--text-primary) 20%,
+    var(--accent-blue) 60%,
+    var(--accent-teal) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.shimmer {
+  background: linear-gradient(
+    100deg,
+    var(--bg-card) 30%,
+    var(--bg-card-hover) 50%,
+    var(--bg-card) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 1.8s ease-in-out infinite;
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(-10%);
+  }
+  to {
+    transform: translateX(110%);
+  }
+}
+
+@keyframes marker-pulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 
