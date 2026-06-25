@@ -289,7 +289,7 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 items-stretch md:grid-cols-3 gap-3 min-h-[420px]">
+      <div className="grid grid-cols-1 items-stretch md:grid-cols-3 gap-3 min-h-105">
         <div className="h-full">
           <div className="h-full" style={{ ...card }}>
           <h2 className="text-sm font-bold mb-4">Weather Monitoring Station</h2>

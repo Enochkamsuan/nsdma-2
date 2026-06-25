@@ -74,7 +74,7 @@ export default function Header() {
 
                     <span
                       className={classNames(
-                        "absolute left-1/2 -bottom-1 h-[2px] bg-red-600 transition-all duration-500 ease-out",
+                        "absolute left-1/2 -bottom-1 h-0.5 bg-red-600 transition-all duration-500 ease-out",
                         pathName === item.href
                           ? "w-full -translate-x-1/2"
                           : "w-0 -translate-x-1/2 group-hover:w-full",
