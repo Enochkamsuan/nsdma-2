@@ -21,6 +21,20 @@
   --accent-yellow: #fbbf24;
   --accent-blue: #38bdf8;
   --accent-teal: #14b8a6;
+   --hp4-bg-base: #eef4fb;
+  --hp4-bg-card: #ffffff;
+  --hp4-bg-card-hover: #f4f8fd;
+  --hp4-border-card: #d9e4f2;
+
+  --hp4-text-primary: #102a43;
+  --hp4-text-secondary: #5b7290;
+  --hp4-text-muted: #94a8c2;
+
+  --hp4-accent-sky: #0ea5e9;
+  --hp4-accent-coral: #fb7185;
+  --hp4-accent-amber: #f59e0b;
+  --hp4-accent-violet: #8b5cf6;
+  --hp4-accent-mint: #10b981;
 }
 
 @theme inline {
@@ -53,18 +67,6 @@
   --animate-pulse-dot: pulse-dot 1.5s ease-in-out infinite;
 }
 
-/* ============================================================
-   HOMEPAGE-3 DASHBOARD THEME TOKENS
-   Registers the extra color/animation names homepage-3's
-   components use (text-aqua, text-sun, bg-storm, animate-rise,
-   etc.) as real Tailwind utilities. These names are new and
-   unused elsewhere in the app, so registering them globally is
-   safe — they don't collide with or override any existing
-   token (--color-primary, --color-foreground, --color-border,
-   --color-muted-foreground are deliberately NOT touched here
-   because app/advisories and others already define/use those
-   for a light theme).
-   ============================================================ */
 @theme inline {
   --color-aqua: var(--accent-blue);
   --color-sun: var(--accent-yellow);
@@ -83,23 +85,22 @@
   --animate-drift: drift 60s linear infinite;
   --animate-marker-pulse: marker-pulse 2.2s ease-out infinite;
   --animate-scale-in: scale-in 0.18s ease-out both;
+  --color-hp4-bg-base: var(--hp4-bg-base);
+  --color-hp4-bg-card: var(--hp4-bg-card);
+  --color-hp4-bg-card-hover: var(--hp4-bg-card-hover);
+  --color-hp4-border-card: var(--hp4-border-card);
+
+  --color-hp4-text-primary: var(--hp4-text-primary);
+  --color-hp4-text-secondary: var(--hp4-text-secondary);
+  --color-hp4-text-muted: var(--hp4-text-muted);
+
+  --color-hp4-sky: var(--hp4-accent-sky);
+  --color-hp4-coral: var(--hp4-accent-coral);
+  --color-hp4-amber: var(--hp4-accent-amber);
+  --color-hp4-violet: var(--hp4-accent-violet);
+  --color-hp4-mint: var(--hp4-accent-mint);
 }
 
-/* ------------------------------------------------------------
-   Scoped overrides for homepage-3 only.
-   `text-foreground`, `text-muted-foreground`, `bg-primary`,
-   `text-primary`, `border-border` already exist as global
-   Tailwind utilities (light-theme values, used by app/advisories
-   and others). Rather than redefining those tokens globally
-   (which would break the light pages), homepage-3's root <main>
-   carries the `.hp3` class, and these custom properties are
-   re-declared *inside* that scope only. Because Tailwind's
-   utility classes read colors via `var(--color-x)` at the point
-   of use, and CSS variables cascade, this swaps the resolved
-   color for any `text-foreground`, `bg-primary`, etc. utility
-   used inside .hp3 — without changing the variable anywhere
-   else in the app.
-   ------------------------------------------------------------ */
 .hp3 {
   --color-foreground: var(--text-primary);
   --color-muted-foreground: var(--text-secondary);
@@ -108,6 +109,23 @@
   --color-primary-foreground: #04111f;
 }
 
+.hp4 {
+  --color-foreground: var(--hp4-text-primary);
+  --color-muted-foreground: var(--hp4-text-secondary);
+  --color-border: var(--hp4-border-card);
+  --color-primary: var(--hp4-accent-sky);
+  --color-primary-foreground: #ffffff;
+  --color-aqua: var(--hp4-accent-sky);
+  --color-sun: var(--hp4-accent-amber);
+  --color-rain: #3b82f6;
+  --color-storm: var(--hp4-accent-violet);
+  --color-success: var(--hp4-accent-mint);
+  --color-danger: var(--hp4-accent-coral);
+  --color-glass-border: var(--hp4-border-card);
+  --color-warning: var(--hp4-accent-coral);
+
+  background-color: var(--hp4-bg-base);
+}
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -175,6 +193,74 @@
   );
   background-size: 200% 100%;
   animation: shimmer-sweep 1.8s ease-in-out infinite;
+}
+.hp4-glass {
+  background-color: color-mix(in srgb, var(--hp4-bg-card) 88%, transparent);
+  border: 1px solid var(--hp4-border-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.6) inset,
+    0 8px 24px -10px rgba(16, 42, 67, 0.12);
+}
+
+.hp4-glass-strong {
+  background-color: color-mix(in srgb, var(--hp4-bg-card) 96%, transparent);
+  border: 1px solid var(--hp4-border-card);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 14px 34px -14px rgba(16, 42, 67, 0.16);
+}
+
+.hp4-card-hover {
+  transition: transform 0.25s ease, border-color 0.25s ease,
+    background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hp4-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--hp4-accent-sky) 35%, var(--hp4-border-card));
+  background-color: var(--hp4-bg-card-hover);
+  box-shadow: 0 16px 36px -16px rgba(16, 42, 67, 0.2);
+}
+
+.hp4-text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    var(--hp4-text-primary) 10%,
+    var(--hp4-accent-sky) 55%,
+    var(--hp4-accent-coral) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.hp4-shimmer {
+  background: linear-gradient(
+    100deg,
+    var(--hp4-bg-card) 30%,
+    var(--hp4-bg-card-hover) 50%,
+    var(--hp4-bg-card) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 1.8s ease-in-out infinite;
+}
+
+/* Sunrise/sunset gradient strip — homepage-4's small bonus
+   feature, used in the hero card to show the day's light cycle */
+.hp4-sun-arc-track {
+  background: linear-gradient(
+    90deg,
+    #1e293b 0%,
+    #fb923c 18%,
+    #fde047 38%,
+    #38bdf8 55%,
+    #fde047 72%,
+    #fb923c 88%,
+    #1e293b 100%
+  );
 }
 
 @keyframes shimmer-sweep {
