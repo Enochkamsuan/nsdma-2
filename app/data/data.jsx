@@ -524,9 +524,6 @@ export const stationMarkers = [
 
 export const NAGALAND_STATION_VIEWBOX = "350 50 650 700";
 
-// ---------------------------------------------------------------------------
-// 2. Per-station weather (drives the SVG map tooltips)
-// ---------------------------------------------------------------------------
 export const mockStationWeather = {
   2206: {
     max_temp: 30.2,
